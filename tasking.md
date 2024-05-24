@@ -4,9 +4,9 @@
 
 ### User login
 
-- [ ] Create Rest API /users/{username}/login
-- [ ] Create `UserService` to verify user
-- [ ] Create db table `user` to store users
+- [x] Create Rest API /users/{username}/login
+- [x] Create `UserService` to verify user
+- [x] Create db table `user` to store users
 
 ### Mock initial users
 
