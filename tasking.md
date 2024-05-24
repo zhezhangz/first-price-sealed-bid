@@ -14,7 +14,7 @@
 
 ### User token
 
-- [ ] Use `UserService` to issue user token
+- [x] Use `UserService` to issue user token
 
 ## Auction Service
 

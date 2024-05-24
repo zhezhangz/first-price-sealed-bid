@@ -4,6 +4,24 @@
 
 The User Service provides user login feature and issues user token.
 
+### API
+
+#### PUT /users/login
+
+Login with username and password to get a token.
+
+> NOTE: The `password` is ignored for just demo the feature,
+> which means any fake password is accepted.
+
+Request body:
+
+```json
+{
+  "username": "alice",
+  "password": "password"
+}
+```
+
 ### Mocked initial users
 
 There are 9 initial users in the database.

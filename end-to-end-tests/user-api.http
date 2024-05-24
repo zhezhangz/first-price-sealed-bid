@@ -1,0 +1,21 @@
+###
+## 1. Login with valid username, expect 200
+
+PUT http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "username": "alice",
+  "password": "123456"
+}
+
+###
+## 2. Login with invalid username, expect 404
+
+PUT http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "username": "zita",
+  "password": "123456"
+}
