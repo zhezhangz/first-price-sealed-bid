@@ -12,11 +12,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Instant;
+import java.util.Base64;
 
 @Repository
 public class JwtTokenGenerator implements TokenGenerator {
 
     private final Algorithm algorithm;
+
+    private final RSAPublicKey publicKey;
 
     public JwtTokenGenerator(@Value("${fpsb.user-token.private-key}") String secret) throws NoSuchAlgorithmException {
         // Todo: Random key pair just for demo.
@@ -24,7 +27,7 @@ public class JwtTokenGenerator implements TokenGenerator {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
         var keyPair = keyPairGenerator.generateKeyPair();
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+        publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         this.algorithm = Algorithm.RSA256(publicKey, privateKey);
     }
@@ -40,5 +43,13 @@ public class JwtTokenGenerator implements TokenGenerator {
         } catch (JWTCreationException exception) {
             throw new RuntimeException("Failed to create token");
         }
+    }
+
+    public String n() {
+        return new String(Base64.getEncoder().encode(this.publicKey.getModulus().toByteArray()));
+    }
+
+    public String e() {
+        return new String(Base64.getEncoder().encode(this.publicKey.getPublicExponent().toByteArray()));
     }
 }
