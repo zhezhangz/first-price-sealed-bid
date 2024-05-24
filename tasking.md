@@ -10,7 +10,7 @@
 
 ### Mock initial users
 
-- [ ] Create flyway script to mock user
+- [x] Create flyway script to mock user
 
 ### User token
 
