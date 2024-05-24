@@ -9,10 +9,11 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final TokenGenerator tokenGenerator;
+
     public String login(String username) {
-        if (!userRepository.existsUsername(username)) {
-            throw new InvalidUser();
-        }
-        return "succeed";
+        return userRepository.getUuidByUserName(username)
+                .map(tokenGenerator::generateToken)
+                .orElseThrow(InvalidUser::new);
     }
 }

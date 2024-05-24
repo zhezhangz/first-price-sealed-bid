@@ -1,6 +1,8 @@
 package org.example.user.domain;
 
+import java.util.Optional;
+
 public interface UserRepository {
 
-    boolean existsUsername(String username);
+    Optional<String> getUuidByUserName(String username);
 }

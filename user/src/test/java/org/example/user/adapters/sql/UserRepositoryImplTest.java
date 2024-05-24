@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -25,15 +27,15 @@ class UserRepositoryImplTest {
 
     @Test
     void should_exist_with_valid_username() {
-        final boolean existed = userRepository.existsUsername("test-user");
+        final Optional<String> uuid = userRepository.getUuidByUserName("test-user");
 
-        assertThat(existed).isTrue();
+        assertThat(uuid).hasValue("00000000-0000-0000-0000-000000001001");
     }
 
     @Test
     void should_not_exist_with_invalid_username() {
-        final boolean existed = userRepository.existsUsername("invalid-username");
+        final Optional<String> uuid = userRepository.getUuidByUserName("invalid-username");
 
-        assertThat(existed).isFalse();
+        assertThat(uuid).isEmpty();
     }
 }
