@@ -62,7 +62,7 @@
     - bid buyer
     - auction id
 
-- [ ] Handle transactional consistency between auction and bids
+- [x] Handle transactional consistency between auction and bids
 
 ### Seller end an auction
 
