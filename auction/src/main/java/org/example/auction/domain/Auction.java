@@ -27,4 +27,6 @@ public class Auction {
     private Long minPrice;
 
     private String seller;
+
+    private AuctionStatus status;
 }

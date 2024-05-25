@@ -44,7 +44,8 @@ class AuctionControllerTest {
 
         @Test
         void should_return_success_when_post_auction() throws Exception {
-            doReturn(new Auction("1", "mock-p", 1001L, "mock-user")).when(auctionService).create(any());
+            doReturn(Auction.builder().id("1").product("mock-p").minPrice(1001L).seller("mock-user").build())
+                    .when(auctionService).create(any());
 
             mockMvc.perform(post("/auctions")
                             .with(SecurityMockMvcRequestPostProcessors.jwt())
@@ -59,8 +60,7 @@ class AuctionControllerTest {
                                 "seller": "mock-user"
                             }
                             """));
-
-            verify(auctionService).create(new Auction(null, "auction1", 1000L, "user"));
+            verify(auctionService).create(new Auction(null, "auction1", 1000L, "user", null));
         }
     }
 }

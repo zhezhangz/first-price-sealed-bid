@@ -25,10 +25,10 @@ class AuctionServiceTest {
 
     @Test
     void should_create_auction_to_repository() {
-        Auction mockSaved = new Auction("1", "p-mock", 1001L, "u-mock");
+        Auction mockSaved = new Auction("1", "p-mock", 1001L, "u-mock", AuctionStatus.OPEN);
         doReturn(mockSaved).when(auctionRepository).save(any());
 
-        final Auction saved = auctionService.create(new Auction(null, "p-1", 1001L, "u-mock"));
+        final Auction saved = auctionService.create(new Auction(null, "p-1", 1001L, "u-mock", AuctionStatus.OPEN));
 
         assertThat(saved).isEqualTo(mockSaved);
     }
