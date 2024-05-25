@@ -26,6 +26,10 @@
 
 ### Seller register new product
 
+- [ ] Create Rest API `POST /auctions`
+- [ ] Create `AuctionService` to register product
+- [ ] Create db table `auction` to store auction
+
 ### Buyer bid in a product
 
 ### Seller end an auction
