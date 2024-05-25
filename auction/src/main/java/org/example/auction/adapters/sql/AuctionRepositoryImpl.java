@@ -34,4 +34,10 @@ public class AuctionRepositoryImpl implements AuctionRepository {
         return jpaAuctionRepository.findById(auctionId)
                 .map(AuctionMapper.MAPPER::toDomain);
     }
+
+    @Override
+    public Optional<Auction> findByIdWithBids(String auctionId) {
+        return jpaAuctionRepository.findById(auctionId)
+                .map(AuctionMapper.MAPPER::toDomainWithBids);
+    }
 }

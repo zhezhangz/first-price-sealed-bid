@@ -12,4 +12,6 @@ public interface AuctionRepository {
     List<Auction> findAll(PageRequest pageRequest);
 
     Optional<Auction> findById(String auctionId);
+
+    Optional<Auction> findByIdWithBids(String auctionId);
 }

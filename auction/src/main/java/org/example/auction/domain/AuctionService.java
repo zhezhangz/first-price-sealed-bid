@@ -35,9 +35,15 @@ public class AuctionService {
         return bidRepository.save(bid);
     }
 
+    @Transactional
     public AuctionResult terminate(String auctionId) {
-        Auction auction = auctionRepository.findById(auctionId)
+        Auction auction = auctionRepository.findByIdWithBids(auctionId)
                 .orElseThrow(AuctionNotFound::new);
-        return null;
+        if (auction.getStatus() == AuctionStatus.OPEN) {
+            auction.close();
+            auctionRepository.save(auction);
+        }
+        final Bid winner = auction.findWinner().orElse(null);
+        return new AuctionResult(auction, winner);
     }
 }

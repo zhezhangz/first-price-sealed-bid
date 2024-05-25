@@ -11,7 +11,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Builder
 @Data
-public class Bid {
+public class Bid implements Comparable<Bid> {
 
     private String id;
 
@@ -22,4 +22,13 @@ public class Bid {
     private Long price;
 
     private Instant bidAt;
+
+    @Override
+    public int compareTo(Bid that) {
+        if (this.price.equals(that.price)) {
+            return that.bidAt.compareTo(this.bidAt);
+        } else {
+            return this.price.compareTo(that.price);
+        }
+    }
 }
