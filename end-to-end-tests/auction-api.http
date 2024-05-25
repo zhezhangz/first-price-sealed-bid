@@ -40,3 +40,10 @@ Content-Type: application/json
 {
   "price": 1500
 }
+
+###
+# 5. Close the auction
+
+PUT http://localhost:8081/auctions/faaa0ef6-dc5a-43ac-95ba-31c15314f726/termination
+Authorization: Bearer {{alice_token}}
+Content-Type: application/json

@@ -1,10 +1,12 @@
 package org.example.auction.adapters.http;
 
+import org.example.auction.adapters.security.AuthorizationService;
 import org.example.auction.domain.Auction;
 import org.example.auction.domain.AuctionNotFound;
 import org.example.auction.domain.AuctionService;
 import org.example.auction.domain.Bid;
 import org.example.auction.domain.BidRejected;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,14 @@ class AuctionControllerTest {
 
     @MockBean
     private AuctionService auctionService;
+
+    @MockBean
+    private AuthorizationService authorizationService;
+
+    @BeforeEach
+    void setUp() {
+        doReturn(true).when(authorizationService).canAccess(any(), any());
+    }
 
     @Nested
     class WhenCreatingAuction {

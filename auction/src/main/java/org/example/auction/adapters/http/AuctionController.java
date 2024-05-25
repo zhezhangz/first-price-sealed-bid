@@ -3,12 +3,14 @@ package org.example.auction.adapters.http;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.auction.adapters.security.AuthorizationService;
 import org.example.auction.domain.Auction;
 import org.example.auction.domain.AuctionResult;
 import org.example.auction.domain.AuctionService;
 import org.example.auction.domain.Bid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +31,8 @@ import java.util.List;
 public class AuctionController {
 
     private final AuctionService auctionService;
+
+    private final AuthorizationService authorizationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -61,6 +65,7 @@ public class AuctionController {
 
     @PutMapping("{auction-id}/termination")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("@authorizationService.canAccess(#auctionId, authentication.name)")
     public AuctionResult terminateAuction(Authentication authentication,
                                           @PathVariable(name = "auction-id") String auctionId) {
         final String userUuid = authentication.getName();
