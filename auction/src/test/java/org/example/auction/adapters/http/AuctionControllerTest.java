@@ -70,7 +70,7 @@ class AuctionControllerTest {
                                 "seller": "mock-user"
                             }
                             """));
-            verify(auctionService).create(new Auction(null, "auction1", 1000L, "user", null));
+            verify(auctionService).create(new Auction("auction1", 1000L, "user"));
         }
 
         @Test

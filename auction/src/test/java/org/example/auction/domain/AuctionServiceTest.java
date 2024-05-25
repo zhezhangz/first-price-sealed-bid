@@ -29,7 +29,7 @@ class AuctionServiceTest {
     void should_create_auction_to_repository() {
         doReturn(null).when(auctionRepository).save(any());
 
-        final Auction auction = new Auction(null, "p-1", 1001L, "u-mock", null);
+        final Auction auction = new Auction("p-1", 1001L, "u-mock");
         auctionService.create(auction);
 
         var auctionCaptor = ArgumentCaptor.forClass(Auction.class);
@@ -44,7 +44,7 @@ class AuctionServiceTest {
 
     @Test
     void should_return_auction_created_by_repository() {
-        Auction mockAuction = new Auction("1", "p-mock", 1001L, "u-mock", AuctionStatus.OPEN);
+        Auction mockAuction = new Auction("1", "p-mock", 1001L, "u-mock", AuctionStatus.OPEN, null);
         doReturn(mockAuction).when(auctionRepository).save(any());
 
         final Auction saved = auctionService.create(new Auction());

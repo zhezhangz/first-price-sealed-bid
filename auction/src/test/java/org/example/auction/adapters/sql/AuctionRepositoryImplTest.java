@@ -28,7 +28,8 @@ class AuctionRepositoryImplTest {
 
     @Test
     void should_save_new_auction_and_create_id() {
-        final Auction auction = new Auction(null, "p-1", 1001L, "u-1", AuctionStatus.OPEN);
+        final Auction auction = new Auction("p-1", 1001L, "u-1");
+        auction.setStatus(AuctionStatus.OPEN);
 
         final Auction saved = auctionRepository.save(auction);
 

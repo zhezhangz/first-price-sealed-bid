@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -32,7 +34,27 @@ public class Auction {
 
     private AuctionStatus status;
 
+    private List<Bid> bids;
+
+    public Auction(String product, Long minPrice, String seller) {
+        this.product = product;
+        this.minPrice = minPrice;
+        this.seller = seller;
+    }
+
     public void open() {
         this.setStatus(AuctionStatus.OPEN);
+    }
+
+    public void placeBid(Bid bid) {
+        if (bid.getPrice() < this.minPrice) {
+            throw new BidRejected("Bid price is less than the minimum price");
+        }
+        if (this.status != AuctionStatus.OPEN) {
+            throw new BidRejected("Auction is closed");
+        }
+        if (bid.getBuyer().equals(this.seller)) {
+            throw new BidRejected("Seller cannot bid on their own auction");
+        }
     }
 }

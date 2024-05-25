@@ -10,7 +10,7 @@ class AuctionMapperTest {
 
     @Test
     void should_map_auction_from_domain_model() {
-        var domainModel = new Auction("1", "p-1", 1001L, "u-1", AuctionStatus.OPEN);
+        var domainModel = new Auction("1", "p-1", 1001L, "u-1", AuctionStatus.OPEN, null);
 
         var persistModel = AuctionMapper.MAPPER.fromDomain(domainModel);
 
