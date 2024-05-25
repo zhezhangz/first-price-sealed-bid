@@ -3,6 +3,7 @@ package org.example.auction.adapters.http;
 import org.example.auction.domain.Auction;
 import org.example.auction.domain.AuctionService;
 import org.example.auction.domain.Bid;
+import org.example.auction.domain.BidRejected;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -145,6 +147,26 @@ class AuctionControllerTest {
                                 "buyer": "b-1",
                                 "price": 1,
                                 "bidAt": "2021-09-01T00:00:00Z"
+                            }
+                            """));
+        }
+
+        @Test
+        void should_return_409_when_service_rejects_bid() throws Exception {
+            doThrow(new BidRejected("any reason")).when(auctionService).placeBid(any());
+
+            mockMvc.perform(post("/auctions/1/bids")
+                            .with(SecurityMockMvcRequestPostProcessors.jwt())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {
+                                        "price": 1
+                                    }"""))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isConflict())
+                    .andExpect(content().json("""
+                            {
+                                "error": "Bid rejected for any reason"
                             }
                             """));
         }
