@@ -37,7 +37,7 @@ public class JwtTokenGenerator implements TokenGenerator {
         try {
             return JWT.create()
                     .withIssuer("fpsb")
-                    .withExpiresAt(Instant.MAX)
+                    .withExpiresAt(Instant.parse("9999-12-31T23:59:59Z"))
                     .withSubject(uuid)
                     .sign(algorithm);
         } catch (JWTCreationException exception) {

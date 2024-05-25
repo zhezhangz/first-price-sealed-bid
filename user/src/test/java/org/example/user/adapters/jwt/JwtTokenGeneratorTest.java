@@ -30,6 +30,6 @@ class JwtTokenGeneratorTest {
         final String algorithmSection = new String(Base64.getDecoder().decode(token.split("\\.")[0]));
         assertThat(algorithmSection).isEqualTo("{\"alg\":\"RS256\",\"typ\":\"JWT\"}");
         final String payloadSection = new String(Base64.getDecoder().decode(token.split("\\.")[1]));
-        assertThat(payloadSection).isEqualTo("{\"iss\":\"fpsb\",\"exp\":31556889864403199,\"sub\":\"00000000-0000-0000-0000-000000000001\"}");
+        assertThat(payloadSection).isEqualTo("{\"iss\":\"fpsb\",\"exp\":253402300799,\"sub\":\"00000000-0000-0000-0000-000000000001\"}");
     }
 }
