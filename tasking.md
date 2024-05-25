@@ -55,7 +55,7 @@
     - [x] Validate auction status = OPEN
     - [x] Validate buyer != seller
 
-- [ ] Create db table `bid` to store bid
+- [x] Create db table `bid` to store bid
     - id
     - bid price
     - bid time
