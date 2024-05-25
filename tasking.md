@@ -62,4 +62,10 @@
     - bid buyer
     - auction id
 
+- [ ] Associate bids with auction
+    - [ ] Join bid to auction when querying auction
+    - [ ] Lazy detach when bid is not needed for auction
+
+- [ ] Handle transactional consistency between auction and bids
+
 ### Seller end an auction
