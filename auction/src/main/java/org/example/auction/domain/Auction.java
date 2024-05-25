@@ -1,5 +1,6 @@
 package org.example.auction.domain;
 
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -24,6 +25,7 @@ public class Auction {
     /**
      * The minimum price of the auction, in cents.
      */
+    @Positive(message = "minPrice must be positive")
     private Long minPrice;
 
     private String seller;

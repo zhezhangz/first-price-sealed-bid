@@ -62,5 +62,15 @@ class AuctionControllerTest {
                             """));
             verify(auctionService).create(new Auction(null, "auction1", 1000L, "user", null));
         }
+
+        @Test
+        void should_return_error_message_when_min_price_is_not_positive() throws Exception {
+            mockMvc.perform(post("/auctions")
+                            .with(SecurityMockMvcRequestPostProcessors.jwt())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"product\": \"auction1\", \"minPrice\": -1}"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json("{\"minPrice\":\"minPrice must be positive\"}"));
+        }
     }
 }

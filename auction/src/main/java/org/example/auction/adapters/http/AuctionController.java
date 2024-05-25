@@ -1,5 +1,6 @@
 package org.example.auction.adapters.http;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auction.domain.Auction;
@@ -22,7 +23,7 @@ public class AuctionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Auction createAuction(Authentication authentication, @RequestBody Auction auction) {
+    public Auction createAuction(Authentication authentication, @RequestBody @Valid Auction auction) {
         final String userUuid = authentication.getName();
         log.info("Creating auction: {} for user {}", auction, userUuid);
         auction.setSeller(userUuid);
