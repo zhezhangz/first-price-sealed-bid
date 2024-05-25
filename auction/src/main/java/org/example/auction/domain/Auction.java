@@ -1,25 +1,30 @@
 package org.example.auction.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
+@Builder
 public class Auction {
 
-    private final String id;
+    private String id;
 
-    private final String product;
+    private String product;
 
     /**
      * The minimum price of the auction, in cents.
      */
-    private final Long minPrice;
+    private Long minPrice;
 
+    private String seller;
 }

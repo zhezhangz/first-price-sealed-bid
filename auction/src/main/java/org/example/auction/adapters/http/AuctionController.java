@@ -23,7 +23,9 @@ public class AuctionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Auction createAuction(Authentication authentication, @RequestBody Auction auction) {
-        log.info("Creating auction: {}", auction);
+        final String userUuid = authentication.getName();
+        log.info("Creating auction: {} for user {}", auction, userUuid);
+        auction.setSeller(userUuid);
         return auctionService.create(auction);
     }
 }
