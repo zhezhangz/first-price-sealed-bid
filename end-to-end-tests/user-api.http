@@ -5,7 +5,7 @@ PUT http://localhost:8080/users/login
 Content-Type: application/json
 
 {
-  "username": "alice",
+  "username": "bobby",
   "password": "123456"
 }
 

@@ -1,13 +1,42 @@
-@token = <access_token>
+@alice_token = <access_token>
+@bobby_token = <access_token>
 
 ###
 
 # 1. Create a new auction with a product
 POST http://localhost:8081/auctions
-Authorization: Bearer {{token}}
+Authorization: Bearer {{alice_token}}
 Content-Type: application/json
 
 {
   "product": "Cook's iPhone 21",
   "minPrice": 1000
+}
+
+###
+
+# 2. Get all auctions
+GET http://localhost:8081/auctions
+Authorization: Bearer {{alice_token}}
+
+###
+
+# 3. Bid for an auction, lower than the minimum price
+POST http://localhost:8081/auctions/2ecc9e90-1d63-4b37-b8dc-213cda30ab10/bids
+Authorization: Bearer {{bobby_token}}
+Content-Type: application/json
+
+{
+  "price": 500
+}
+
+
+###
+# 4. Bid for an auction
+POST http://localhost:8081/auctions/2ecc9e90-1d63-4b37-b8dc-213cda30ab10/bids
+Authorization: Bearer {{bobby_token}}
+Content-Type: application/json
+
+{
+  "price": 1500
 }
