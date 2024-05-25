@@ -2,7 +2,12 @@
 
 ###
 
-# 1.
-GET http://localhost:8081/test
+# 1. Create a new auction with a product
+POST http://localhost:8081/auctions
 Authorization: Bearer {{token}}
+Content-Type: application/json
 
+{
+  "product": "Cook's iPhone 21",
+  "minPrice": 1000
+}
