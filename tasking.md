@@ -21,8 +21,8 @@
 ### Validate user token
 
 - [x] Add `/.well-known/jwks.json` endpoint in user service
-- [ ] Add TokenValidator in auction service
-- [ ] Protect auction service with Spring security
+- [x] Add TokenValidator in auction service
+- [x] Protect auction service with Spring security
 
 ### Seller register new product
 

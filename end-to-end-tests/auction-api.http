@@ -1,0 +1,8 @@
+@token = <access_token>
+
+###
+
+# 1.
+GET http://localhost:8081/test
+Authorization: Bearer {{token}}
+
