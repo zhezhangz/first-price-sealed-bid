@@ -7,10 +7,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@Sql(scripts = {"/database_init/init_auctions.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class AuctionRepositoryImplTest {
 
     @Autowired
@@ -32,5 +35,16 @@ class AuctionRepositoryImplTest {
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getProduct()).isEqualTo("p-1");
         assertThat(saved.getMinPrice()).isEqualTo(1001L);
+    }
+
+    @Test
+    void should_find_by_paging() {
+        final var pageRequest = PageRequest.of(3, 2);
+
+        final var auctions = auctionRepository.findAll(pageRequest);
+
+        assertThat(auctions).hasSize(2);
+        assertThat(auctions.get(0).getProduct()).isEqualTo("product7");
+        assertThat(auctions.get(1).getProduct()).isEqualTo("product8");
     }
 }

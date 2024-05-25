@@ -7,16 +7,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuctionController.class)
@@ -73,4 +78,26 @@ class AuctionControllerTest {
                     .andExpect(content().json("{\"minPrice\":\"minPrice must be positive\"}"));
         }
     }
+
+    @Nested
+    class WhenListingAuctions {
+
+        @Test
+        void should_return_auction_list() throws Exception {
+            doReturn(List.of(
+                    Auction.builder().id("1").product("mock-p1").minPrice(1001L).seller("mock-user1").build(),
+                    Auction.builder().id("2").product("mock-p2").minPrice(1002L).seller("mock-user2").build()
+            ))
+                    .when(auctionService).findAll(any());
+
+            mockMvc.perform(get("/auctions?page=4&size=8")
+                            .with(SecurityMockMvcRequestPostProcessors.jwt())
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$").isArray())
+                    .andExpect(jsonPath("$.length()").value(2));
+            verify(auctionService).findAll(PageRequest.of(4, 8));
+        }
+    }
+
 }

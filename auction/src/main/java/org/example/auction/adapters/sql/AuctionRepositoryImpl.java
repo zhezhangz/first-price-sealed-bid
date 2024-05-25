@@ -3,7 +3,10 @@ package org.example.auction.adapters.sql;
 import lombok.RequiredArgsConstructor;
 import org.example.auction.domain.Auction;
 import org.example.auction.domain.AuctionRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,5 +19,12 @@ public class AuctionRepositoryImpl implements AuctionRepository {
         var persistModel = AuctionMapper.MAPPER.fromDomain(auction);
         var saved = jpaAuctionRepository.save(persistModel);
         return AuctionMapper.MAPPER.toDomain(saved);
+    }
+
+    @Override
+    public List<Auction> findAll(PageRequest pageRequest) {
+        return jpaAuctionRepository.findAll(pageRequest).stream()
+                .map(AuctionMapper.MAPPER::toDomain)
+                .toList();
     }
 }
