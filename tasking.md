@@ -33,4 +33,32 @@
 
 ### Buyer bid in a product
 
+- [ ] Create Rest API `POST /auctions/{auction-id}/bids`
+    - bid price
+    - auction id
+
+- [ ] Create `Bid` domain model
+    - id
+    - bid price
+    - bid time
+    - bid buyer
+    - auction id
+
+- [ ] Add a list of `Bid` in `Auction` domain model
+
+- [ ] Create `BidService` to handle bid
+
+- [ ] Add `bid` method in `Auction` take a `Bid` object
+    - [ ] Validate bid price > min price
+    - [ ] Validate auction status = OPEN
+    - [ ] Validate buyer != seller
+    - [ ] Set bid time
+
+- [ ] Create db table `bid` to store bid
+    - id
+    - bid price
+    - bid time
+    - bid buyer
+    - auction id
+
 ### Seller end an auction
