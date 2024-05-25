@@ -1,14 +1,19 @@
 package org.example.auction.adapters.sql;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "auction")
@@ -29,4 +34,7 @@ public class AuctionPersistModel {
     private String seller;
 
     private String status;
+
+    @OneToMany(mappedBy = "auctionId", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<BidPersistModel> bids;
 }

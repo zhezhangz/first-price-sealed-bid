@@ -13,7 +13,9 @@ import org.springframework.test.context.jdbc.Sql;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Sql(scripts = {"/database_init/init_auctions.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(
+        scripts = {"/database_init/init_auctions.sql", "/database_init/init_bids.sql"},
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class AuctionRepositoryImplTest {
 
     @Autowired
@@ -57,5 +59,13 @@ class AuctionRepositoryImplTest {
 
         final var notFound = auctionRepository.findById("invalid-id");
         assertThat(notFound).isEmpty();
+    }
+
+    @Test
+    void should_find_auction_with_associated_bids() {
+        jpaAuctionRepository.findById("1")
+                .ifPresent(auction -> assertThat(auction.getBids())
+                        .hasSize(2)
+                        .map(BidPersistModel::getBuyer).map(String::trim).containsExactlyInAnyOrder("buyer-1", "buyer-2"));
     }
 }
