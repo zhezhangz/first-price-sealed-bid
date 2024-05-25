@@ -1,6 +1,7 @@
 package org.example.auction.adapters.http;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.auction.domain.AuctionNotFound;
 import org.example.auction.domain.BidRejected;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -34,5 +35,12 @@ public class ControllerExceptionHandler {
     public Map<String, String> handleBidRejectedExceptions(BidRejected ex) {
         log.debug("handling bid rejected", ex);
         return Map.of("error", ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(AuctionNotFound.class)
+    public Map<String, String> handleAuctionNotFoundExceptions(AuctionNotFound ex) {
+        log.debug("handling AuctionNotFound", ex);
+        return Map.of("error", "Auction not found");
     }
 }

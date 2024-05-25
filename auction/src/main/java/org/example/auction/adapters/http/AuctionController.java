@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auction.domain.Auction;
+import org.example.auction.domain.AuctionResult;
 import org.example.auction.domain.AuctionService;
 import org.example.auction.domain.Bid;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,4 +59,12 @@ public class AuctionController {
         return auctionService.placeBid(bid);
     }
 
+    @PutMapping("{auction-id}/termination")
+    @ResponseStatus(HttpStatus.OK)
+    public AuctionResult terminateAuction(Authentication authentication,
+                                          @PathVariable(name = "auction-id") String auctionId) {
+        final String userUuid = authentication.getName();
+        log.info("Terminating auction {} by user {}", auctionId, userUuid);
+        return auctionService.terminate(auctionId);
+    }
 }

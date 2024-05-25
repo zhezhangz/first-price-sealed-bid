@@ -30,8 +30,14 @@ public class AuctionService {
     public Bid placeBid(Bid bid) {
         bid.setBidAt(Instant.now());
         Auction auction = auctionRepository.findById(bid.getAuctionId())
-                .orElseThrow(() -> new BidRejected("Auction not found"));
+                .orElseThrow(AuctionNotFound::new);
         auction.placeBid(bid);
         return bidRepository.save(bid);
+    }
+
+    public AuctionResult terminate(String auctionId) {
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElseThrow(AuctionNotFound::new);
+        return null;
     }
 }

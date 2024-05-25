@@ -1,6 +1,7 @@
 package org.example.auction.adapters.http;
 
 import org.example.auction.domain.Auction;
+import org.example.auction.domain.AuctionNotFound;
 import org.example.auction.domain.AuctionService;
 import org.example.auction.domain.Bid;
 import org.example.auction.domain.BidRejected;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -152,6 +154,26 @@ class AuctionControllerTest {
         }
 
         @Test
+        void should_return_404_when_auction_is_not_found() throws Exception {
+            doThrow(new AuctionNotFound()).when(auctionService).placeBid(any());
+
+            mockMvc.perform(post("/auctions/1/bids")
+                            .with(SecurityMockMvcRequestPostProcessors.jwt())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {
+                                        "price": 1
+                                    }"""))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isNotFound())
+                    .andExpect(content().json("""
+                            {
+                                "error": "Auction not found"
+                            }
+                            """));
+        }
+
+        @Test
         void should_return_409_when_service_rejects_bid() throws Exception {
             doThrow(new BidRejected("any reason")).when(auctionService).placeBid(any());
 
@@ -172,4 +194,23 @@ class AuctionControllerTest {
         }
     }
 
+    @Nested
+    class WhenTerminatingAuction {
+
+        @Test
+        void should_return_404_when_auction_is_not_found() throws Exception {
+            doThrow(new AuctionNotFound()).when(auctionService).terminate(any());
+
+            mockMvc.perform(put("/auctions/1/termination")
+                            .with(SecurityMockMvcRequestPostProcessors.jwt())
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isNotFound())
+                    .andExpect(content().json("""
+                            {
+                                "error": "Auction not found"
+                            }
+                            """));
+        }
+    }
 }
