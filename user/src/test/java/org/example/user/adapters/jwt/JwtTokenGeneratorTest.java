@@ -16,7 +16,7 @@ class JwtTokenGeneratorTest {
 
     @BeforeEach
     void setUp() throws NoSuchAlgorithmException {
-        tokenGenerator = new JwtTokenGenerator("secret");
+        tokenGenerator = new JwtTokenGenerator("secret", "fpsb");
     }
 
     @Test

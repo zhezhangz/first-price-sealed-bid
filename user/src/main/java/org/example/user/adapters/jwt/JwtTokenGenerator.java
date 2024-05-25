@@ -21,7 +21,10 @@ public class JwtTokenGenerator implements TokenGenerator {
 
     private final RSAPublicKey publicKey;
 
-    public JwtTokenGenerator(@Value("${fpsb.user-token.private-key}") String secret) throws NoSuchAlgorithmException {
+    private final String issuer;
+
+    public JwtTokenGenerator(@Value("${fpsb.user-token.private-key}") String secret,
+                             @Value("${fpsb.user-service.url}") String issuer) throws NoSuchAlgorithmException {
         // Todo: Random key pair just for demo.
         //       In production, key pair should be created from env secret
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -30,13 +33,14 @@ public class JwtTokenGenerator implements TokenGenerator {
         publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         this.algorithm = Algorithm.RSA256(publicKey, privateKey);
+        this.issuer = issuer;
     }
 
     @Override
     public String generateToken(String uuid) {
         try {
             return JWT.create()
-                    .withIssuer("fpsb")
+                    .withIssuer(issuer)
                     .withExpiresAt(Instant.parse("9999-12-31T23:59:59Z"))
                     .withSubject(uuid)
                     .sign(algorithm);
