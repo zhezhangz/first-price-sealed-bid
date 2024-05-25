@@ -7,9 +7,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -20,9 +24,12 @@ class AuctionServiceTest {
     @Mock
     private AuctionRepository auctionRepository;
 
+    @Mock
+    private BidRepository bidRepository;
+
     @BeforeEach
     void setUp() {
-        auctionService = new AuctionService(auctionRepository);
+        auctionService = new AuctionService(auctionRepository, bidRepository);
     }
 
     @Test
@@ -50,5 +57,21 @@ class AuctionServiceTest {
         final Auction saved = auctionService.create(new Auction());
 
         assertThat(saved).isEqualTo(mockAuction);
+    }
+
+    @Test
+    void should_verify_bid_placement_and_save() {
+        Auction mockAuction = new Auction("1", "p-mock", 1001L, "u-seller", AuctionStatus.OPEN, null);
+        doReturn(Optional.of(mockAuction)).when(auctionRepository).findById(any());
+        doReturn(new Bid("1", "1", "u-mock", 10_000L, Instant.now())).when(bidRepository).save(any());
+
+        final Bid saved = auctionService.placeBid(new Bid(null, "1", "u-buyer", 10_000L, null));
+
+        assertThat(saved.getId()).isEqualTo("1");
+
+        final ArgumentCaptor<Bid> bidArgumentCaptor = ArgumentCaptor.forClass(Bid.class);
+        verify(bidRepository, times(1)).save(bidArgumentCaptor.capture());
+        final Bid bidToBeSaved = bidArgumentCaptor.getValue();
+        assertThat(bidToBeSaved.getBidAt()).isNotNull();
     }
 }

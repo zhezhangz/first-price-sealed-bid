@@ -46,9 +46,9 @@
 
 - [x] Add a list of `Bid` in `Auction` domain model
 
-- [ ] Create `BidService` to handle bid
-    - [ ] Set bid time
-    - [ ] Update db for auction with bid 
+- [x] Create `BidService` to handle bid
+    - [x] Set bid time
+    - [x] Update db for auction with bid
 
 - [x] Add `bid` method in `Auction` take a `Bid` object
     - [x] Validate bid price >= min price

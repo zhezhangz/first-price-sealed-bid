@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -11,6 +12,8 @@ import java.util.List;
 public class AuctionService {
 
     private final AuctionRepository auctionRepository;
+
+    private final BidRepository bidRepository;
 
     public Auction create(Auction auction) {
         auction.open();
@@ -22,8 +25,10 @@ public class AuctionService {
     }
 
     public Bid placeBid(Bid bid) {
+        bid.setBidAt(Instant.now());
         Auction auction = auctionRepository.findById(bid.getAuctionId())
                 .orElseThrow(() -> new BidRejected("Auction not found"));
-        return null;
+        auction.placeBid(bid);
+        return bidRepository.save(bid);
     }
 }
