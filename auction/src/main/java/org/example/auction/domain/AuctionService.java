@@ -20,4 +20,8 @@ public class AuctionService {
     public List<Auction> findAll(PageRequest pageRequest) {
         return auctionRepository.findAll(pageRequest);
     }
+
+    public Bid placeBid(Bid bid) {
+        return null;
+    }
 }

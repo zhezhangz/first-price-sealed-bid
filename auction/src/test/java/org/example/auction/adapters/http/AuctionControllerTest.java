@@ -2,6 +2,7 @@ package org.example.auction.adapters.http;
 
 import org.example.auction.domain.Auction;
 import org.example.auction.domain.AuctionService;
+import org.example.auction.domain.Bid;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -97,6 +100,53 @@ class AuctionControllerTest {
                     .andExpect(jsonPath("$").isArray())
                     .andExpect(jsonPath("$.length()").value(2));
             verify(auctionService).findAll(PageRequest.of(4, 8));
+        }
+    }
+
+    @Nested
+    class WhenCreatingBid {
+
+        @Test
+        void should_return_400_when_bid_price_is_not_positive() throws Exception {
+            mockMvc.perform(post("/auctions/1/bids")
+                            .with(SecurityMockMvcRequestPostProcessors.jwt())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {
+                                        "price": -1
+                                    }"""))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json("""
+                            {
+                                "price": "bid price should be positive"
+                            }
+                            """));
+            verifyNoInteractions(auctionService);
+        }
+
+        @Test
+        void should_create_bid() throws Exception {
+            final Instant mockedBidTime = Instant.parse("2021-09-01T00:00:00Z");
+            doReturn(new Bid("1", "a-1", "b-1", 1L, mockedBidTime)).when(auctionService).placeBid(any());
+            mockMvc.perform(post("/auctions/1/bids")
+                            .with(SecurityMockMvcRequestPostProcessors.jwt())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("""
+                                    {
+                                        "price": 1
+                                    }"""))
+                    .andDo(MockMvcResultHandlers.print())
+                    .andExpect(status().isCreated())
+                    .andExpect(content().json("""
+                            {
+                                "id": "1",
+                                "auctionId": "a-1",
+                                "buyer": "b-1",
+                                "price": 1,
+                                "bidAt": "2021-09-01T00:00:00Z"
+                            }
+                            """));
         }
     }
 

@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.auction.domain.Auction;
 import org.example.auction.domain.AuctionService;
+import org.example.auction.domain.Bid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,4 +44,17 @@ public class AuctionController {
         final PageRequest pageRequest = PageRequest.of(page, size);
         return auctionService.findAll(pageRequest);
     }
+
+    @PostMapping("{auction-id}/bids")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Bid placeBid(Authentication authentication,
+                        @PathVariable(name = "auction-id") String auctionId,
+                        @RequestBody @Valid BidRequest bidRequest) {
+        final String buyer = authentication.getName();
+        final Long bidPrice = bidRequest.price();
+        log.info("Placing bid with price {} for auction {} by buyer {}", bidPrice, auctionId, buyer);
+        final Bid bid = Bid.builder().price(bidPrice).buyer(buyer).auctionId(auctionId).build();
+        return auctionService.placeBid(bid);
+    }
+
 }
