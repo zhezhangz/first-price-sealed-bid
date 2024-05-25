@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -26,5 +27,11 @@ public class AuctionRepositoryImpl implements AuctionRepository {
         return jpaAuctionRepository.findAll(pageRequest).stream()
                 .map(AuctionMapper.MAPPER::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Optional<Auction> findById(String auctionId) {
+        return jpaAuctionRepository.findById(auctionId)
+                .map(AuctionMapper.MAPPER::toDomain);
     }
 }

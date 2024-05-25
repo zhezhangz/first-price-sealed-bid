@@ -22,6 +22,8 @@ public class AuctionService {
     }
 
     public Bid placeBid(Bid bid) {
+        Auction auction = auctionRepository.findById(bid.getAuctionId())
+                .orElseThrow(() -> new BidRejected("Auction not found"));
         return null;
     }
 }

@@ -47,4 +47,14 @@ class AuctionRepositoryImplTest {
         assertThat(auctions.get(0).getProduct()).isEqualTo("product7");
         assertThat(auctions.get(1).getProduct()).isEqualTo("product8");
     }
+
+    @Test
+    void should_find_by_id() {
+        final var auction = auctionRepository.findById("1");
+        assertThat(auction).isPresent()
+                .map(Auction::getProduct).hasValue("product1");
+
+        final var notFound = auctionRepository.findById("invalid-id");
+        assertThat(notFound).isEmpty();
+    }
 }
