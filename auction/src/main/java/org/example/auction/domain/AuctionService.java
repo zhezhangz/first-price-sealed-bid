@@ -10,6 +10,7 @@ public class AuctionService {
     private final AuctionRepository auctionRepository;
 
     public Auction create(Auction auction) {
+        auction.open();
         return auctionRepository.save(auction);
     }
 }

@@ -29,4 +29,8 @@ public class Auction {
     private String seller;
 
     private AuctionStatus status;
+
+    public void open() {
+        this.setStatus(AuctionStatus.OPEN);
+    }
 }
