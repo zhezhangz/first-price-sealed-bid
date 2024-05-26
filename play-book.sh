@@ -31,6 +31,10 @@ function check_service() {
   fi
 }
 
+parse_json() {
+  read -r json
+  echo "$json" | tr "{" '\n' | tr , '\n' | tr "}" '\n' | grep "\"$1\"" | tr '"' ' ' | awk  -F' ' '{print $NF}'
+}
 function login_user() {
   curl -s -X PUT http://localhost:8080/users/login \
     -H "Content-Type: application/json" \
@@ -88,7 +92,7 @@ auction_id=$(curl -s -X POST http://localhost:8081/auctions \
         "product": "iPhone 21",
         "minPrice": 1000
       }
-     ' | jq -r '.id')
+     ' | parse_json "id")
 
 ok "created! Auction ID: $auction_id"
 
@@ -104,7 +108,7 @@ bobby_bid_id=$(curl -s -X POST http://localhost:8081/auctions/"$auction_id"/bids
   -d '{
         "price": 1200
       }
-     ' | jq -r '.id')
+     ' | parse_json "id")
 
 press_enter_to_continue
 ok "placed! Bid ID: $bobby_bid_id"
@@ -121,7 +125,7 @@ carla_bid_id=$(curl -s -X POST http://localhost:8081/auctions/"$auction_id"/bids
   -d '{
         "price": 1400
       }
-     ' | jq -r '.id')
+     ' | parse_json "id")
 
 press_enter_to_continue
 ok "placed! Bid ID: $carla_bid_id"
@@ -133,12 +137,14 @@ step "Close the auction:"
 printf "   User alice closes the auction 'iPhone 21'\n\n"
 
 press_enter_to_continue
-ok "Winner:"
 
-curl -s -X PUT http://localhost:8081/auctions/"$auction_id"/termination \
+termination_response=$(curl -s -X PUT http://localhost:8081/auctions/"$auction_id"/termination \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $user_token_alice" \
-   | jq -r '.winner'
+  -H "Authorization: Bearer $user_token_alice")
+winner=$(echo "${termination_response##*winner}" | parse_json "buyer")
+price=$(echo "${termination_response##*winner}" | parse_json "price")
+
+ok "Winner is $winner with price $price"
 
 split
 ok "That's all folks!"
